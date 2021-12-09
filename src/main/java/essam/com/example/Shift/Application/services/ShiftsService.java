@@ -38,6 +38,8 @@ public class ShiftsService {
 
         shift.setStatus(ShiftStatus.ASSIGNED);
         shift.setAssignee(application.getApplicant());
+        shift.setAssigneeRate(application.getProposedRate());
+        shift.setCreatorRate(application.getProposedRate() * 1.2);
         this.shiftRepository.saveAndFlush(shift);
         this.applicationRepository.deleteByApplicantInRange(application.getApplicant().getId(), shift.getStartTime(), shift.getEndTime());
 
