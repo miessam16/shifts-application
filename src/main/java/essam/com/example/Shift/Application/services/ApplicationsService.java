@@ -44,9 +44,14 @@ public class ApplicationsService {
         return applicationRepository.saveAndFlush(new Application(shift, user, request));
     }
 
-    public Page<Application> find(User user, Long shiftId, int page, int limit) {
+    public Page<Application> findShiftApplications(User user, Long shiftId, int page, int limit) {
         Shift shift = this.shiftRepository.findByIdAndCreator(shiftId, user).orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN));
         Pageable pageable = PageRequest.of(page, limit);
         return applicationRepository.findAllByShift(shift, pageable);
+    }
+
+    public Page<Application> userApplications(User user, int page, int limit) {
+        Pageable pageable = PageRequest.of(page, limit);
+        return applicationRepository.findAllByApplicant(user, pageable);
     }
 }

@@ -10,4 +10,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
     public boolean existsByApplicantAndShift(User applicant, Shift shift);
     Page<Application> findAllByShift(Shift shift, Pageable pageable);
+    Page<Application> findAllByApplicant(User user, Pageable pageable);
 }

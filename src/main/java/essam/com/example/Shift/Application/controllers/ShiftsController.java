@@ -45,6 +45,6 @@ public class ShiftsController extends BaseController {
             @RequestParam(name = "page") final int page,
             @RequestParam(name = "limit") int limit
     ) {
-       return applicationsService.find(user, id, page, limit);
+       return applicationsService.findShiftApplications(user, id, page, limit);
     }
 }
