@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.List;
 
 @Entity(name = "users")
 public class User implements UserDetails {
@@ -25,6 +26,12 @@ public class User implements UserDetails {
     @Column(nullable = false)
     @JsonIgnore
     private String password;
+
+    @OneToMany(mappedBy = "assignee")
+    private List<Shift> assignedShifts;
+
+    @OneToMany(mappedBy = "creator")
+    private List<Shift> createdShifts;
 
     public User() {}
 

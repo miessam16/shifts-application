@@ -14,7 +14,7 @@ public abstract class BaseController {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Map<String, String> handleValidationErrors(MethodArgumentNotValidException exception) {
         Map<String, String> errors = new HashMap<String, String>();
-        exception.getAllErrors().stream().map(err -> (FieldError) err).forEach((FieldError error) -> {
+        exception.getAllErrors().stream().parallel().map(err -> (FieldError) err).forEach((FieldError error) -> {
             String fieldName = error.getField();
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
