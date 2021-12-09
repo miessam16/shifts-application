@@ -7,6 +7,9 @@ import essam.com.example.Shift.Application.repositories.ApplicationRepository;
 import essam.com.example.Shift.Application.repositories.ShiftRepository;
 import essam.com.example.Shift.Application.requests.CreateApplicationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -20,24 +23,30 @@ public class ApplicationsService {
     private ShiftRepository shiftRepository;
 
     public Application create(User user, CreateApplicationRequest request, Long shiftId) {
-        Shift shift = this.shiftRepository.findById(shiftId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Shift Not Found"));
+        Shift shift = shiftRepository.findById(shiftId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Shift Not Found"));
 
         if (shift.getCreator().getId() == user.getId()) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Cannot apply to your shift");
         }
 
-        Integer numberOfShiftsInShiftTime = this.shiftRepository.countByAssigneeInRange(user.getId(), shift.getStartTime(), shift.getEndTime());
+        Integer numberOfShiftsInShiftTime = shiftRepository.countByAssigneeInRange(user.getId(), shift.getStartTime(), shift.getEndTime());
 
         if (numberOfShiftsInShiftTime > 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User is not available in shift time");
         }
 
-        Boolean hasAppliedBefore = this.applicationRepository.existsByApplicantAndShift(user, shift);
+        Boolean hasAppliedBefore = applicationRepository.existsByApplicantAndShift(user, shift);
 
         if (hasAppliedBefore) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User has applied before");
         }
 
-        return this.applicationRepository.saveAndFlush(new Application(shift, user, request));
+        return applicationRepository.saveAndFlush(new Application(shift, user, request));
+    }
+
+    public Page<Application> find(User user, Long shiftId, int page, int limit) {
+        Shift shift = this.shiftRepository.findByIdAndCreator(shiftId, user).orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN));
+        Pageable pageable = PageRequest.of(page, limit);
+        return applicationRepository.findAllByShift(shift, pageable);
     }
 }

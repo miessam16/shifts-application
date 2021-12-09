@@ -1,5 +1,6 @@
 package essam.com.example.Shift.Application.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import essam.com.example.Shift.Application.requests.CreateApplicationRequest;
 
 import javax.persistence.*;
@@ -14,8 +15,9 @@ public class Application {
 
     private String coverLetter;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shift_id", nullable = false)
+    @JsonIgnore
     private Shift shift;
 
     @ManyToOne

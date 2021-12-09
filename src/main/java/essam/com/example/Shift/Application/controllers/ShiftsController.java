@@ -35,6 +35,16 @@ public class ShiftsController extends BaseController {
 
     @PostMapping("{id}/applications")
     public Application create(@AuthenticationPrincipal User user, @Valid @RequestBody final CreateApplicationRequest body, @PathVariable Long id) {
-        return this.applicationsService.create(user, body, id);
+        return applicationsService.create(user, body, id);
+    }
+
+    @GetMapping("{id}/applications")
+    public Page<Application> findShiftApplications(
+            @AuthenticationPrincipal User user,
+            @PathVariable Long id,
+            @RequestParam(name = "page") final int page,
+            @RequestParam(name = "limit") int limit
+    ) {
+       return applicationsService.find(user, id, page, limit);
     }
 }
