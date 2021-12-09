@@ -65,4 +65,31 @@ public class ShiftsService {
 
         return this.shiftRepository.saveAndFlush(shift);
     }
+
+    public Shift clockOut(User user, Long id) {
+        Shift shift = this.shiftRepository.findByIdAndAssigneeAndStatus(id, user, ShiftStatus.IN_PROGRESS).orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN));
+
+        Date now = new Date();
+        Date clockIn = shift.getClockIn();
+
+        if (now.after(shift.getEndTime())) {
+            shift.setClockOut(new Date());
+        } else {
+            shift.setClockOut(now);
+        }
+
+        if (clockIn.before(shift.getStartTime())) {
+            clockIn = shift.getStartTime();
+        }
+
+        long workedMinutes = TimeUnit.MILLISECONDS.toMinutes(shift.getClockOut().getTime() - clockIn.getTime());
+        double workedHours = workedMinutes / 60.0;
+
+        shift.setStatus(ShiftStatus.COMPLETED);
+        shift.setAssigneePayment(Math.round(workedHours * shift.getAssigneeRate() * 100) / 100.0);
+        shift.setCreatorPayment(Math.round(workedHours * shift.getCreatorRate() * 100) / 100.0);
+        shift.setFees(shift.getCreatorPayment() - shift.getAssigneePayment());
+
+        return this.shiftRepository.saveAndFlush(shift);
+    }
 }
