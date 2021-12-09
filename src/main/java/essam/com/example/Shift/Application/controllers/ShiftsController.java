@@ -16,7 +16,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("api/v1/shifts")
-public class ShiftsController extends BaseController {
+public class ShiftsController {
     @Autowired
     private ShiftsService shiftsService;
 
