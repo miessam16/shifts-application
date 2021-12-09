@@ -53,4 +53,8 @@ public class ShiftsController extends BaseController {
         return shiftsService.assign(user, id, applicationId);
     }
 
+    @PatchMapping("{id}/startTime")
+    public Shift clockIn(@AuthenticationPrincipal User user, @PathVariable Long id) {
+        return shiftsService.clockIn(user, id);
+    }
 }
