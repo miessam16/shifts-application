@@ -47,4 +47,10 @@ public class ShiftsController extends BaseController {
     ) {
        return applicationsService.findShiftApplications(user, id, page, limit);
     }
+
+    @PostMapping("{id}/applications/{applicationId}/assign")
+    public Shift assign(@AuthenticationPrincipal User user, @PathVariable Long id, @PathVariable Long applicationId) {
+        return shiftsService.assign(user, id, applicationId);
+    }
+
 }

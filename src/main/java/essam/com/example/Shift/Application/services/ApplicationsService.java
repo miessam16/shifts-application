@@ -30,6 +30,7 @@ public class ApplicationsService {
         }
 
         Integer numberOfShiftsInShiftTime = shiftRepository.countByAssigneeInRange(user.getId(), shift.getStartTime(), shift.getEndTime());
+        System.out.println(numberOfShiftsInShiftTime);
 
         if (numberOfShiftsInShiftTime > 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User is not available in shift time");

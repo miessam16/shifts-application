@@ -25,4 +25,5 @@ public interface ShiftRepository extends JpaRepository<Shift, Long> {
     )
     Integer countByAssigneeInRange(Long assigneeId, Date startTime, Date endTime);
     Optional<Shift> findByIdAndCreator(Long id, User creator);
+    Optional<Shift> findByIdAndCreatorAndStatus(Long id, User creator, ShiftStatus status);
 }
