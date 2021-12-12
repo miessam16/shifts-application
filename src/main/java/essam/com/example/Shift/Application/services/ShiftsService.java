@@ -83,7 +83,7 @@ public class ShiftsService {
         }
 
         long workedMinutes = TimeUnit.MILLISECONDS.toMinutes(shift.getClockOut().getTime() - clockIn.getTime());
-        double workedHours = workedMinutes / 60.0;
+        double workedHours = Math.max(workedMinutes / 60.0, 0);
 
         shift.setStatus(ShiftStatus.COMPLETED);
         shift.setAssigneePayment(Math.round(workedHours * shift.getAssigneeRate() * 100) / 100.0);
