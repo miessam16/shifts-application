@@ -41,8 +41,15 @@ public class AuthService implements UserDetailsService {
         return jwtTokenUtil.generateToken(user);
     }
 
+    public String login(final essam.com.example.Shift.Application.grpc.LoginRequest request) throws BadCredentialsException {
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getPhoneNumber(), request.getPassword()));
+        User user = (User) authentication.getPrincipal();
+        return jwtTokenUtil.generateToken(user);
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        System.out.println("username = " + username);
         return userRepository.findByPhoneNumber(username).orElseThrow(() -> new UsernameNotFoundException(String.format("User: %s is not found", username)));
     }
 

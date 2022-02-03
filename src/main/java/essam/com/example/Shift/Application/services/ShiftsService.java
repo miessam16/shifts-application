@@ -1,6 +1,7 @@
 package essam.com.example.Shift.Application.services;
 
 import essam.com.example.Shift.Application.enums.ShiftStatus;
+import essam.com.example.Shift.Application.grpc.Shifts;
 import essam.com.example.Shift.Application.models.Application;
 import essam.com.example.Shift.Application.models.Shift;
 import essam.com.example.Shift.Application.models.User;
@@ -27,6 +28,10 @@ public class ShiftsService {
     private ApplicationRepository applicationRepository;
 
     public Shift create(User creator, CreateShiftRequest request) {
+        return shiftRepository.saveAndFlush(new Shift(creator, request));
+    }
+
+    public Shift create(User creator, Shifts.CreateShiftRequest request) {
         return shiftRepository.saveAndFlush(new Shift(creator, request));
     }
 

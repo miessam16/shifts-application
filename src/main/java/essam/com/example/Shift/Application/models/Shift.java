@@ -1,6 +1,7 @@
 package essam.com.example.Shift.Application.models;
 
 import essam.com.example.Shift.Application.enums.ShiftStatus;
+import essam.com.example.Shift.Application.grpc.Shifts;
 import essam.com.example.Shift.Application.requests.CreateShiftRequest;
 
 import javax.persistence.*;
@@ -54,6 +55,12 @@ public class Shift {
         this.creator = creator;
         this.startTime = request.getStartTime();
         this.endTime = request.getEndTime();
+    }
+
+    public Shift(User creator, Shifts.CreateShiftRequest request) {
+        this.creator = creator;
+        this.startTime = new Date(request.getStartTime());
+        this.endTime = new Date(request.getStartTime());
     }
 
     public Long getId() {

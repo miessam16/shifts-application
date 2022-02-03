@@ -1,0 +1,31 @@
+syntax = "proto3";
+package essam.com.example.Shift.Application;
+option java_multiple_files = false;
+option java_package = "essam.com.example.Shift.Application.grpc";
+option java_outer_classname = "Shifts";
+
+service ShiftService {
+  rpc findOne(FindOneShiftRequest) returns (OneShiftResponse);
+  rpc find(FindShifts) returns (stream OneShiftResponse);
+  rpc createShift(CreateShiftRequest)  returns (OneShiftResponse);
+}
+
+message CreateShiftRequest {
+  int64 startTime = 1;
+  int64 endTime = 2;
+}
+
+message FindOneShiftRequest {
+  int64 id = 1;
+}
+
+message OneShiftResponse {
+  int64 id = 1;
+  float startTime = 2;
+  float endTime = 3;
+}
+
+message FindShifts {
+  int64 limit = 1;
+  int32 page = 2;
+}
